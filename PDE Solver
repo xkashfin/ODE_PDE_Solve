@@ -1,0 +1,31 @@
+from fenics import *
+
+# Define mesh and function space
+mesh = IntervalMesh(100, 0, 1)  # 1D mesh with 100 intervals
+V = FunctionSpace(mesh, 'P', 1)  # Piecewise linear function space
+
+# Define test and trial functions
+u = TrialFunction(V)
+v = TestFunction(V)
+
+# Define diffusivity coefficient and source term
+D = Constant(1.0)
+f = Expression('sin(x[0])', degree=2)
+
+# Define variational problem
+a = D*inner(grad(u), grad(v))*dx
+L = f*v*dx
+
+# Define boundary conditions
+u_L = Constant(0.0)
+u_R = Constant(0.0)
+bc = DirichletBC(V, u_L, 'near(x[0], 0.0)')  # left boundary
+bc2 = DirichletBC(V, u_R, 'near(x[0], 1.0)')  # right boundary
+bcs = [bc, bc2]
+
+# Solve PDE
+u = Function(V)
+solve(a == L, u, bcs)
+
+# Plot solution
+plot(u)
