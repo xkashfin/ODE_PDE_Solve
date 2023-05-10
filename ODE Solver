@@ -1,0 +1,17 @@
+from scipy.integrate import solve_ivp
+import numpy as np
+
+# Define ODE function
+def odefunc(t, y):
+    dydt = -y + 1  # Example ODE: y' = -y + 1
+    return dydt
+
+# Set initial conditions and time span
+tspan = [0, 5]
+y0 = 0
+
+# Solve ODE
+sol = solve_ivp(odefunc, tspan, [y0])
+
+# Print solution
+print(sol)
